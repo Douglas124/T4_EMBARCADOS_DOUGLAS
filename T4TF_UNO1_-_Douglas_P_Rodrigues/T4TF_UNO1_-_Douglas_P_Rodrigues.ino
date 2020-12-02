@@ -95,23 +95,23 @@ void ESCREVE_MOTOR(int posicao_servo){
 void ESCREVE_LCD(){
  char buffer[30];
 
- lcd.setCursor(0,1); 
- sprintf(buffer,"T:%.2doC",DADOS_UNO1.DHT_TEMP);
+ lcd.setCursor(0,0); 
+ sprintf(buffer,"%.2doC",DADOS_UNO1.DHT_TEMP);
  lcd.print(buffer);
 
- lcd.setCursor(8,1); 
- sprintf(buffer,"U:%.2d%%",DADOS_UNO1.DHT_UMIDADE);
+ lcd.setCursor(6,0); 
+ sprintf(buffer,"%.2d%%",DADOS_UNO1.DHT_UMIDADE);
  lcd.print(buffer);
  
- lcd.setCursor(0,2); 
- sprintf(buffer,"P:%.3d",DADOS_UNO1.BMP_PRESSAO);
+ lcd.setCursor(12,0); 
+ sprintf(buffer,"%.2dm",DADOS_UNO1.GP2D12_DISTANCIA);
+ lcd.print(buffer);
+ 
+ lcd.setCursor(0,1); 
+ sprintf(buffer,"P:%.4d",DADOS_UNO1.BMP_PRESSAO);
  lcd.print(buffer);
 
- lcd.setCursor(8,2); 
- sprintf(buffer,"D:%.2dm",DADOS_UNO1.GP2D12_DISTANCIA);
- lcd.print(buffer);
-
- lcd.setCursor(10,2); 
+ lcd.setCursor(10,1); 
  sprintf(buffer,"S:%.2d",DADOS_UNO1.POSICAO_SERVO);
  lcd.print(buffer);
 
@@ -126,9 +126,8 @@ void setup() {
   dht.begin();
   BMP_INIT();
   meuservo.attach(SERVO_PIN);
+  lcd.begin(numCols, numRows);
   Serial.begin(9600);
- lcd.setCursor(0,0); 
-  lcd.print("teste");
   
   
 }
