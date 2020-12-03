@@ -153,6 +153,10 @@ void MainWindow::on_pushButton_4_clicked()
     DADOS_GERAL.DATA_MINUTO = timeinfo->tm_min;
     DADOS_GERAL.DATA_SEGUNDO = timeinfo->tm_sec;
 
+    DADOS_GERAL.DATA_ANO = timeinfo->tm_year;
+    DADOS_GERAL.DATA_MES = timeinfo->tm_mon;
+    DADOS_GERAL.DATA_DIA = timeinfo->tm_mday;
+
     DADOS_GERAL.STATUS_CONFIG_HORA = '1';
     DADOS_GERAL.ENDERECO = '2';
     serial->write((char*)&DADOS_GERAL,sizeof(DADOS_GERAL));
@@ -164,5 +168,6 @@ void MainWindow::on_pushButton_3_clicked()
     DADOS_GERAL.POSICAO_SERVO = ui->SLIDER_SERVO1->value();
 
     DADOS_GERAL.ENDERECO = '1';
+    DADOS_GERAL.STATUS_CONFIG_HORA = '0';
     serial->write((char*)&DADOS_GERAL,sizeof(DADOS_GERAL));
 }

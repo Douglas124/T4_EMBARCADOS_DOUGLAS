@@ -25,34 +25,34 @@ LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 //------------------------------------------------------------------------------------- VAR GLOBAIS
 // these constants won't change.  But you can change the size of
 // your LCD using them:
-const int numRows = 2;
-const int numCols = 16;
-static int estado_codigo=0, angulo;
+const int numRows = 4;
+const int numCols = 20;
+static int estado_codigo=0, angulo, aux_hora=0, RL_STATUS=0;
 Servo meuservo;
 DS1307 clock;//define a object of DS1307 class
 
 typedef struct{
   char ENDERECO;
   char STATUS_CONFIG_HORA;
-  char DATA_HORA = 10;
-  char DATA_MINUTO = 10;
-  char DATA_SEGUNDO = 10;
-  char DATA_DIA = 10;
-  char DATA_MES =10 ;
-  char DATA_ANO = 10;
-  char LIGA_RELE_HORA = 10;
-  char LIGA_RELE_MIN = 10;
-  char LIGA_RELE_SEG = 12;
-  char DESLIGA_RELE_HORA = 10;
-  char DESLIGA_RELE_MIN = 10;
-  char DESLIGA_RELE_SEG = 15;
+  char DATA_HORA = 0;
+  char DATA_MINUTO = 0;
+  char DATA_SEGUNDO = 0;
+  char DATA_DIA = 0;
+  char DATA_MES =0 ;
+  char DATA_ANO = 0;
+  char LIGA_RELE_HORA = 0;
+  char LIGA_RELE_MIN = 0;
+  char LIGA_RELE_SEG = 0;
+  char DESLIGA_RELE_HORA = 0;
+  char DESLIGA_RELE_MIN = 0;
+  char DESLIGA_RELE_SEG = 0;
   char SERVO;
-  char LIGA_SERVO_HORA = 10;
-  char LIGA_SERVO_MIN = 10;
-  char LIGA_SERVO_SEG = 12;
-  char DESLIGA_SERVO_HORA = 10;
-  char DESLIGA_SERVO_MIN = 10;
-  char DESLIGA_SERVO_SEG = 15;
+  char LIGA_SERVO_HORA = 0;
+  char LIGA_SERVO_MIN = 0;
+  char LIGA_SERVO_SEG = 0;
+  char DESLIGA_SERVO_HORA = 0;
+  char DESLIGA_SERVO_MIN = 0;
+  char DESLIGA_SERVO_SEG = 0;
   char fim = '.';
 }estrutura;
 estrutura DADOS_UNO2RX, DADOS_UNO2;
@@ -65,33 +65,63 @@ char dadoRx;
 
 //--------------------------------------------------- ESCREVE A HORA NA SERIAL
 void printTime(){
-  long int aux=0;
+  if (aux_hora == 0){
+  lcd.setCursor(2,0); 
+  lcd.print("Configure a Hora!");
+
+  }
+  else {
   clock.getTime();
-  lcd.setCursor(0,0); 
+  lcd.setCursor(1,0); 
   lcd.print(clock.hour, DEC);
   lcd.print(":");
   lcd.print(clock.minute, DEC);
   lcd.print(":");
   lcd.print(clock.second, DEC);
 
-  delay(50);
-
-  lcd.setCursor(0,1); 
-  lcd.print(DADOS_UNO2.DATA_HORA, DEC);
-  lcd.print(":");
-  lcd.print(DADOS_UNO2.DATA_MINUTO, DEC);
-  lcd.print(":");
-  lcd.print(DADOS_UNO2.DATA_SEGUNDO, DEC);
   
+  lcd.setCursor(10,0); 
+  lcd.print(clock.month, DEC);
+  lcd.print("/");
+  lcd.print(clock.dayOfMonth, DEC);
+  lcd.print("/");
+  lcd.print(clock.year, DEC);
+
   delay(50);
 
-//  Serial.print("  ");
-//  Serial.print(clock.month, DEC);
-//  Serial.print("/");
-//  Serial.print(clock.dayOfMonth, DEC);
-//  Serial.print("/");
-//  Serial.print(clock.year+2000, DEC);
-//  
+  }
+
+}
+
+//--------------------------------------------------- ESCREVE LCD
+void ESCREVE_LCD(){
+ char buffer[30];
+
+ lcd.setCursor(0,1); 
+ sprintf(buffer,"M:%.2d:%.2d:%.2d",DADOS_UNO2.LIGA_SERVO_HORA,DADOS_UNO2.LIGA_SERVO_MIN,DADOS_UNO2.LIGA_SERVO_SEG);
+ lcd.print(buffer);
+ lcd.setCursor(11,1); 
+ sprintf(buffer,"%.02d:%.2d:%.2d",DADOS_UNO2.DESLIGA_SERVO_HORA,DADOS_UNO2.DESLIGA_SERVO_MIN,DADOS_UNO2.DESLIGA_SERVO_SEG);
+ lcd.print(buffer);
+ 
+ lcd.setCursor(0,2); 
+ sprintf(buffer,"R:%.2d:%.2d:%.2d",(int)DADOS_UNO2.LIGA_RELE_HORA,(int)DADOS_UNO2.LIGA_RELE_MIN,(int)DADOS_UNO2.LIGA_RELE_SEG);
+ lcd.print(buffer);
+ lcd.setCursor(11,2); 
+ sprintf(buffer,"%.2d:%.2d:%.2d",DADOS_UNO2.DESLIGA_RELE_HORA,DADOS_UNO2.DESLIGA_RELE_MIN,DADOS_UNO2.DESLIGA_RELE_SEG);
+ lcd.print(buffer);
+
+ lcd.setCursor(0,3); 
+ sprintf(buffer,"Motor:%.2d",DADOS_UNO2.SERVO);
+ lcd.print(buffer);
+
+
+ lcd.setCursor(13,3); 
+ if (RL_STATUS == 1)  sprintf(buffer,"RELE:O");
+ else if (RL_STATUS == 2)  sprintf(buffer,"RELE:C");
+ lcd.print(buffer);
+
+
 }
 
 
@@ -99,19 +129,10 @@ void printTime(){
 void ESCREVE_MOTOR(int posicao_servo){
   escreve_pos_servo = map(posicao_servo , 0, 180, 0, 255);      // scale it to use it with the servo (value between 0 and 180)
   meuservo.write(posicao_servo);                             // sets the servo position according to the scaled value
-  DADOS_UNO2.SERVO = posicao_servo;
+  DADOS_UNO2.SERVO = posicao_servo;   
   delay(15);                                                      // waits for the servo to get there
 }
 
-//--------------------------------------------------- ESCREVE LCD
-void ESCREVE_LCD(){
- char buffer[30];
-
- lcd.setCursor(10,1); 
- printf(buffer,"S:%.2d",DADOS_UNO2.SERVO);
- lcd.print(buffer);
-
-}
 
 //--------------------------------------------------- CONFIGURA HORA
 void CONFIG_HORA (void){
@@ -119,20 +140,22 @@ void CONFIG_HORA (void){
   clock.fillByHMS(DADOS_UNO2.DATA_HORA,DADOS_UNO2.DATA_MINUTO,DADOS_UNO2.DATA_SEGUNDO);//15:28 30"
   clock.setTime();//write time to the RTC chip
   DADOS_UNO2.STATUS_CONFIG_HORA = '0';
+  aux_hora = 1;
+  lcd.clear();
+  delay(50);
 }
 
 
 //--------------------------------------------------- ACIONA RELE
 void ACIONA_RELE(void){
   clock.getTime();
-//  lcd.setCursor(0,1); 
-//  lcd.print((int)DADOS_UNO2.LIGA_RELE_HORA);
   lcd.setCursor(8,1); 
   
   if ((clock.hour >= (int)DADOS_UNO2.LIGA_RELE_HORA)){
     if ((clock.minute >= (int)DADOS_UNO2.LIGA_RELE_MIN)){
       if((clock.second >= (int)DADOS_UNO2.LIGA_RELE_SEG) && (clock.second <= (int)DADOS_UNO2.LIGA_RELE_SEG+3)){
       digitalWrite(RELE_PIN, HIGH);
+      RL_STATUS=1;
       }
     }
   }
@@ -141,6 +164,7 @@ void ACIONA_RELE(void){
     if ((clock.minute >= (int)DADOS_UNO2.DESLIGA_RELE_MIN)){
       if((clock.second >=(int)DADOS_UNO2.DESLIGA_RELE_SEG) && (clock.second <= (int)DADOS_UNO2.DESLIGA_RELE_SEG+3)){
       digitalWrite(RELE_PIN, LOW);
+      RL_STATUS=2;
       }
     }
   }
@@ -179,7 +203,6 @@ void setup() {
   Serial.begin(9600);
   clock.begin();
   pinMode(RELE_PIN, OUTPUT);
-  CONFIG_HORA();
 
   
 }
@@ -193,6 +216,7 @@ void loop() {
     printTime();
     ACIONA_RELE();
     ACIONA_SERVO();
+    ESCREVE_LCD();
    if (Serial.available()){
       Serial.readBytesUntil('.',(char*)&DADOS_UNO2, sizeof(DADOS_UNO2));
       if (DADOS_UNO2.ENDERECO == '2'){

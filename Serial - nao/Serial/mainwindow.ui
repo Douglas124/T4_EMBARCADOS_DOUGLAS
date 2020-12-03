@@ -242,8 +242,8 @@
    <widget class="QSpinBox" name="SPIN_HORA_DESLIGA_M">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>180</y>
+      <x>370</x>
+      <y>150</y>
       <width>42</width>
       <height>22</height>
      </rect>
@@ -258,8 +258,8 @@
    <widget class="QSpinBox" name="SPIN_MIN_DESLIGA_M">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>180</y>
+      <x>420</x>
+      <y>150</y>
       <width>42</width>
       <height>22</height>
      </rect>
@@ -271,8 +271,8 @@
    <widget class="QSpinBox" name="SPIN_SEG_DESLIGA_M">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>180</y>
+      <x>470</x>
+      <y>150</y>
       <width>42</width>
       <height>22</height>
      </rect>
@@ -313,8 +313,8 @@
    <widget class="QSpinBox" name="SPIN_HORA_LIGA_R">
     <property name="geometry">
      <rect>
-      <x>370</x>
-      <y>150</y>
+      <x>30</x>
+      <y>180</y>
       <width>42</width>
       <height>22</height>
      </rect>
@@ -329,8 +329,8 @@
    <widget class="QSpinBox" name="SPIN_MIN_LIGA_R">
     <property name="geometry">
      <rect>
-      <x>420</x>
-      <y>150</y>
+      <x>80</x>
+      <y>180</y>
       <width>42</width>
       <height>22</height>
      </rect>
@@ -355,8 +355,8 @@
    <widget class="QSpinBox" name="SPIN_SEG_LIGA_R">
     <property name="geometry">
      <rect>
-      <x>470</x>
-      <y>150</y>
+      <x>130</x>
+      <y>180</y>
       <width>42</width>
       <height>22</height>
      </rect>
@@ -381,8 +381,8 @@
    <widget class="QLabel" name="label_9">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>180</y>
+      <x>520</x>
+      <y>150</y>
       <width>91</width>
       <height>16</height>
      </rect>
@@ -394,8 +394,8 @@
    <widget class="QLabel" name="label_10">
     <property name="geometry">
      <rect>
-      <x>520</x>
-      <y>150</y>
+      <x>180</x>
+      <y>180</y>
       <width>71</width>
       <height>16</height>
      </rect>
