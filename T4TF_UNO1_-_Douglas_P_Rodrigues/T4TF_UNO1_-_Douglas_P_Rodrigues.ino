@@ -34,12 +34,12 @@ static int estado_codigo=0, angulo;
 Servo meuservo;
 
 typedef struct{
-  char ENDERECO;
-  char BMP_PRESSAO;
-  char DHT_TEMP;
-  char DHT_UMIDADE;
-  char GP2D12_DISTANCIA;
-  char POSICAO_SERVO;
+  char ENDERECO = '0';
+  char BMP_PRESSAO = '5';
+  char DHT_TEMP = '5';
+  char DHT_UMIDADE = '5';
+  char GP2D12_DISTANCIA = '5';
+  char POSICAO_SERVO = '5';
   char fim = '.';
 }estrutura;
 estrutura DADOS_UNO1;
@@ -51,27 +51,26 @@ char dadoRx;
 //--------------------------------------------------- INICIA BMP180
 void BMP_INIT(void){
   if (!BMP180.begin()) {
-  Serial.println("algo de errado nao está certo.");
   while (1) {}
   }
 }
 
 //--------------------------------------------------- LEITURA BMP180
 void LEITURA_BMP(void){
-  DADOS_UNO1.BMP_PRESSAO = BMP180.readPressure()/1000;
+  DADOS_UNO1.BMP_PRESSAO = (int)(BMP180.readPressure()/1000);
 }
 
 
 //--------------------------------------------------- LEITURA DHT11
 void LEITURA_DHT11(void){
-  DADOS_UNO1.DHT_TEMP = dht.readTemperature();
-  DADOS_UNO1.DHT_UMIDADE = dht.readHumidity();
+  DADOS_UNO1.DHT_TEMP = (int)(dht.readTemperature());
+  DADOS_UNO1.DHT_UMIDADE = (int)(dht.readHumidity());
   delay(250);
 }
 
 //--------------------------------------------------- LEITURA DISTANCIA
 void LEITURA_GP2D12(void){
-  int leit_aux = 0;
+  int leit_aux;
   char inteiro=0, resto=0, valor=0;
 
   leit_aux = analogRead(GP2D12_PIN);
@@ -80,7 +79,7 @@ void LEITURA_GP2D12(void){
   inteiro = valor/10;
   resto = valor%10;
 
-  DADOS_UNO1.GP2D12_DISTANCIA = inteiro*10+resto;
+  DADOS_UNO1.GP2D12_DISTANCIA = (int)(inteiro*10+resto);
   
   
 }
@@ -142,18 +141,16 @@ void loop() {
   LEITURA_BMP();
   LEITURA_DHT11();
   LEITURA_GP2D12();
-//  ESCREVE_LCD();
-
-
+  ESCREVE_LCD();
 
   if (Serial.available()){
       Serial.readBytesUntil('.',(char*)&DADOS_UNO1, sizeof(DADOS_UNO1));
       if (DADOS_UNO1.ENDERECO == '1'){
-        ESCREVE_MOTOR();        
+        ESCREVE_MOTOR();      
       }
+       
     }
 
-  Serial.write((char*)&DADOS_UNO1, sizeof(DADOS_UNO1));
-  delay(200);
-  
-  }
+    Serial.write((char*)&DADOS_UNO1, sizeof(DADOS_UNO1)); 
+    delay(500);
+}

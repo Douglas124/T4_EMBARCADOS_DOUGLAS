@@ -69,15 +69,21 @@ void printTime(){
   clock.getTime();
   lcd.setCursor(0,0); 
   lcd.print(clock.hour, DEC);
-  Serial.print(clock.hour, DEC);
   lcd.print(":");
-  Serial.print(":");
   lcd.print(clock.minute, DEC);
-  Serial.print(clock.minute, DEC);
   lcd.print(":");
-  Serial.print(":");
   lcd.print(clock.second, DEC);
-  Serial.print(clock.second, DEC);
+
+  delay(50);
+
+  lcd.setCursor(0,1); 
+  lcd.print(DADOS_UNO2.DATA_HORA, DEC);
+  lcd.print(":");
+  lcd.print(DADOS_UNO2.DATA_MINUTO, DEC);
+  lcd.print(":");
+  lcd.print(DADOS_UNO2.DATA_SEGUNDO, DEC);
+  
+  delay(50);
 
 //  Serial.print("  ");
 //  Serial.print(clock.month, DEC);
@@ -86,7 +92,6 @@ void printTime(){
 //  Serial.print("/");
 //  Serial.print(clock.year+2000, DEC);
 //  
-  Serial.println(" ");
 }
 
 
@@ -113,14 +118,15 @@ void CONFIG_HORA (void){
   clock.fillByYMD(DADOS_UNO2.DATA_ANO,DADOS_UNO2.DATA_MES,DADOS_UNO2.DATA_DIA);//Jan 19,2013
   clock.fillByHMS(DADOS_UNO2.DATA_HORA,DADOS_UNO2.DATA_MINUTO,DADOS_UNO2.DATA_SEGUNDO);//15:28 30"
   clock.setTime();//write time to the RTC chip
+  DADOS_UNO2.STATUS_CONFIG_HORA = '0';
 }
 
 
 //--------------------------------------------------- ACIONA RELE
 void ACIONA_RELE(void){
   clock.getTime();
-  lcd.setCursor(0,1); 
-  lcd.print((int)DADOS_UNO2.LIGA_RELE_HORA);
+//  lcd.setCursor(0,1); 
+//  lcd.print((int)DADOS_UNO2.LIGA_RELE_HORA);
   lcd.setCursor(8,1); 
   
   if ((clock.hour >= (int)DADOS_UNO2.LIGA_RELE_HORA)){
@@ -188,7 +194,7 @@ void loop() {
     ACIONA_RELE();
     ACIONA_SERVO();
    if (Serial.available()){
-      Serial.readBytesUntil('.',(char*)&DADOS_UNO2RX, sizeof(DADOS_UNO2RX));
+      Serial.readBytesUntil('.',(char*)&DADOS_UNO2, sizeof(DADOS_UNO2));
       if (DADOS_UNO2.ENDERECO == '2'){
           if (DADOS_UNO2.STATUS_CONFIG_HORA == '1'){
           CONFIG_HORA();
