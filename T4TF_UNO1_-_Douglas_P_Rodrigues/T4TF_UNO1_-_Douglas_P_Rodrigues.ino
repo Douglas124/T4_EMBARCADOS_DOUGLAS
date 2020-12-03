@@ -34,6 +34,7 @@ static int estado_codigo=0, angulo;
 Servo meuservo;
 
 typedef struct{
+  char ENDERECO;
   char BMP_PRESSAO;
   char DHT_TEMP;
   char DHT_UMIDADE;
@@ -43,6 +44,7 @@ typedef struct{
 }estrutura;
 estrutura DADOS_UNO1;
 int escreve_pos_servo=0;
+char dadoRx;
 
 
 //------------------------------------------------------------------------------------- FUNÇÕES 
@@ -86,8 +88,9 @@ void LEITURA_GP2D12(void){
 
 //--------------------------------------------------- ESCREVE MOTOR
 void ESCREVE_MOTOR(int posicao_servo){
-  escreve_pos_servo = map(posicao_servo , 0, 1023, 0, 180);      // scale it to use it with the servo (value between 0 and 180)
-  meuservo.write(escreve_pos_servo );                             // sets the servo position according to the scaled value
+  escreve_pos_servo = map(posicao_servo , 0, 180, 0, 255);      // scale it to use it with the servo (value between 0 and 180)
+  meuservo.write(posicao_servo);                             // sets the servo position according to the scaled value
+  DADOS_UNO1.POSICAO_SERVO = posicao_servo;
   delay(15);                                                      // waits for the servo to get there
 }
 
@@ -142,5 +145,31 @@ void loop() {
   LEITURA_DHT11();
   LEITURA_GP2D12();
   ESCREVE_LCD();
+
+  if (Serial.available()){
+    dadoRx = Serial.read();
+    if(dadoRx == 'A'){
+      ESCREVE_MOTOR(0);
+      Serial.write(dadoRx);
+      dadoRx = 0;
+    }
+    else if(dadoRx == 'B'){
+      ESCREVE_MOTOR(45);
+      Serial.write(dadoRx);
+      dadoRx = 0;
+    }
+    else if(dadoRx == 'C'){
+      ESCREVE_MOTOR(90);
+      Serial.write(dadoRx);
+      dadoRx = 0;
+    }
+    else if(dadoRx == 'D'){
+      ESCREVE_MOTOR(120);
+      Serial.write(dadoRx);
+      dadoRx = 0;
+    }
+  }
+
+  
 
 }
