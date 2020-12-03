@@ -87,10 +87,8 @@ void LEITURA_GP2D12(void){
 
 
 //--------------------------------------------------- ESCREVE MOTOR
-void ESCREVE_MOTOR(int posicao_servo){
-  escreve_pos_servo = map(posicao_servo , 0, 180, 0, 255);      // scale it to use it with the servo (value between 0 and 180)
-  meuservo.write(posicao_servo);                             // sets the servo position according to the scaled value
-  DADOS_UNO1.POSICAO_SERVO = posicao_servo;
+void ESCREVE_MOTOR(void){
+  meuservo.write(DADOS_UNO1.POSICAO_SERVO);
   delay(15);                                                      // waits for the servo to get there
 }
 
@@ -144,32 +142,18 @@ void loop() {
   LEITURA_BMP();
   LEITURA_DHT11();
   LEITURA_GP2D12();
-  ESCREVE_LCD();
+//  ESCREVE_LCD();
+
+
 
   if (Serial.available()){
-    dadoRx = Serial.read();
-    if(dadoRx == 'A'){
-      ESCREVE_MOTOR(0);
-      Serial.write(dadoRx);
-      dadoRx = 0;
+      Serial.readBytesUntil('.',(char*)&DADOS_UNO1, sizeof(DADOS_UNO1));
+      if (DADOS_UNO1.ENDERECO == '1'){
+        ESCREVE_MOTOR();        
+      }
     }
-    else if(dadoRx == 'B'){
-      ESCREVE_MOTOR(45);
-      Serial.write(dadoRx);
-      dadoRx = 0;
-    }
-    else if(dadoRx == 'C'){
-      ESCREVE_MOTOR(90);
-      Serial.write(dadoRx);
-      dadoRx = 0;
-    }
-    else if(dadoRx == 'D'){
-      ESCREVE_MOTOR(120);
-      Serial.write(dadoRx);
-      dadoRx = 0;
-    }
-  }
 
+  Serial.write((char*)&DADOS_UNO1, sizeof(DADOS_UNO1));
+  delay(200);
   
-
-}
+  }

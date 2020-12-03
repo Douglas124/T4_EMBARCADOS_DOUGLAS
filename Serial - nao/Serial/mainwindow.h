@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include <QSerialPort>
-#include <QMessageBox>
 
 namespace Ui {
 class MainWindow;
@@ -18,19 +17,10 @@ public:
     ~MainWindow();
 
 private slots:
-
+    void on_pushButton_clicked();
     void readData();
     void timer_teste();
-
-    void on_BOTAO_ENVIA_clicked();
-
-    void on_BOTAO_CONN_clicked();
-
-    void on_BOTAO_LERDADOS_clicked();
-
-    void on_BOTAO_APAGA_clicked();
-
-    void on_BOTAO_LIMPA_clicked();
+    void on_pushButton_2_clicked();
 
 private:
     Ui::MainWindow *ui;

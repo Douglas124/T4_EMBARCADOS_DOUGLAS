@@ -188,25 +188,11 @@ void loop() {
     ACIONA_RELE();
     ACIONA_SERVO();
    if (Serial.available()){
-    dadoRx = Serial.read();
-    if(dadoRx == 'E'){
-      digitalWrite(RELE_PIN,!digitalRead(RELE_PIN));
-      Serial.write(dadoRx);
-      dadoRx = 0;
+      Serial.readBytesUntil('.',(char*)&DADOS_UNO2RX, sizeof(DADOS_UNO2RX));
+      if (DADOS_UNO2.ENDERECO == '2'){
+          if (DADOS_UNO2.STATUS_CONFIG_HORA == '1'){
+          CONFIG_HORA();
+        }
+      }
     }
-    else if(dadoRx == 'F'){
-      digitalWrite(RELE_PIN,!digitalRead(RELE_PIN));
-      Serial.write(dadoRx);
-      dadoRx = 0;
-    }
-   }
-    
-//      Serial.readBytesUntil('.',(char*)&DADOS_UNO2RX, sizeof(DADOS_UNO2RX));
-//      if (DADOS_UNO2.ENDERECO == '2'){
-//        if (DADOS_UNO2.STATUS_CONFIG_HORA == '1'){
-//          CONFIG_HORA();
-//        }
-//      }
-
-
 }
